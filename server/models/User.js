@@ -3,7 +3,9 @@ import autoIncrement from 'mongoose-sequence';
 import bcrypt from 'bcrypt-nodejs';
 
 const AutoIncrement = autoIncrement(mongoose);
+
 const Schema = mongoose.Schema;
+
 const validateEmail = (email) => {
     var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return re.test(email)
@@ -13,7 +15,7 @@ const User = new Schema({
     firstname: {
         type: String,
         min: [2, 'Firstname too short'],
-        max: [12, 'Firstname too long'],
+        max: [24, 'Firstname too long'],
         required: [true, 'Firstname is required']
     },
     username: {
@@ -69,5 +71,5 @@ User.pre('save', function(next) {
     });
   });
 
-User.plugin(AutoIncrement, {inc_field: 'user_id'});
+User.plugin(AutoIncrement, { inc_field: 'user_id' });
 module.exports = mongoose.model('User', User);

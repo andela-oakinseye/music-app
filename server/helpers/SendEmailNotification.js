@@ -23,8 +23,7 @@ const SendMail = (message) => {
         html: message.html
     };
 
-    return transporter.sendMail(mailOptions, function(error, info){
-        console.log(mailOptions)
+    return transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.log(error);
         } else {

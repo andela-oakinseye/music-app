@@ -22,5 +22,5 @@ const Rating = new Schema({
     }
 });
 
-Rating.plugin(AutoIncrement, {inc_field: 'rating_id'});
+Rating.plugin(AutoIncrement, { inc_field: 'rating_id' });
 module.exports = mongoose.model('Rating', Rating);

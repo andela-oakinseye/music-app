@@ -20,5 +20,5 @@ const Comment = new Schema({
     }
 });
 
-Media.plugin(AutoIncrement, {inc_field: 'comment_id'});
+Media.plugin(AutoIncrement, { inc_field: 'comment_id' });
 module.exports = mongoose.model('Comment', Comment);

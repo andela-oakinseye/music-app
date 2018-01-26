@@ -5,15 +5,18 @@ import HashIds from 'hashids';
 import moment from 'moment';
 
 import User from '../models/User';
+
 import * as GenerateMessage from '../helpers/GenerateMessage';
-import SendMail from '../helpers/SendEmailNotification';
+
 import SendEmailNotification from '../helpers/SendEmailNotification';
 
 dotenv.config();
+
 const secret = process.env.SECRET || '|{-_-}|';
 const hashSalt = process.env.HASH_ID_SALT;
 
 const hashIds = new HashIds(hashSalt, 4); // Pad it to 4
+
 const profileFields = 'username firstname email created last_login';
 
 export const Register = (req, res) => {
@@ -22,12 +25,11 @@ export const Register = (req, res) => {
         password: req.body.password,
         email: req.body.email,
         firstname: req.body.firstname,
-        lastname: req.body.lastname,
     });
 
     return user.save((err, user) => {
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 success: false,
                 message: err.message,
             });
@@ -68,11 +70,9 @@ export const Login = (req, res) => {
                     username: user.username,
                     id: hashIds.encode(user.user_id)
                 }
-
                 const token = jwt.sign(userData, secret, {
                     expiresIn: '14 days'
                 });
-
 
                 return User.findOneAndUpdate({ username: user.username }, { last_login: Date.now() })
                     .then((user) => {
@@ -98,7 +98,6 @@ export const Login = (req, res) => {
                 });
             }
         }
-
     });
 }
 

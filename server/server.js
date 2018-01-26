@@ -1,4 +1,3 @@
-
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
@@ -6,6 +5,7 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 
 import * as Routes from './routes/index';
+import AuthChecker from './middlewares/AuthChecker';
 
 dotenv.config();
 
@@ -14,7 +14,10 @@ const MONGO_URL = process.env.MONGO_URL;
 const SECRET = process.env.SECRET
 
 const app = express();
+
+// ? 
 app.set('trust proxy', true);
+
 
 // Connect to mongodb
 mongoose.connect(MONGO_URL, (err) => {
@@ -39,22 +42,19 @@ app.get('/', (req, res) => {
     return res.send("Welcome")
 });
 
-
-app.get('/api/user/:user_id', Routes.User.GetUserProfile);
+// User profile
+app.get('/api/user/:user_id', AuthChecker, Routes.User.GetUserProfile);
 
 app.post('/api/user/login', Routes.User.Login);
 app.post('/api/user/signup', Routes.User.Signup);
-app.post('/api/user/media/:user_id', Routes.Media.GetUserMedia);
+
+app.get('/api/user/media/:user_id', AuthChecker, Routes.Media.GetUserMedia);
 
 
-// app.get('/api/me')
-
-app.get('/api/media/me', Routes.Media.GetMyMedia);
-
-
-app.get('/api/media', Routes.Media.GetAllMedia);
-app.get('/api/media/:media_id', Routes.Media.GetMedia);
-app.post('/api/media', Routes.Media.AddMedia);
+app.get('/api/media/me', AuthChecker, Routes.Media.GetMyMedia);
+app.get('/api/media', AuthChecker, Routes.Media.GetAllMedia);
+app.get('/api/media/:media_id', AuthChecker, Routes.Media.GetMedia);
+app.post('/api/media', AuthChecker, Routes.Media.AddMedia);
 
 app.listen(PORT, () => {
     console.log('Running on : ' + PORT);

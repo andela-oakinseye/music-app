@@ -29,5 +29,5 @@ const Media = new Schema({
     }
 });
 
-Media.plugin(AutoIncrement, {inc_field: 'media_id'});
+Media.plugin(AutoIncrement, { inc_field: 'media_id' });
 module.exports = mongoose.model('Media', Media);
