@@ -32,6 +32,7 @@ var JWT_SECRET = process.env.JWT_SECRET;
 var sign = function sign(user) {
     return jwt.sign({
         username: user.username,
+        firstname: user.firstname,
         id: (0, _UserId.encode)(user.user_id)
     }, JWT_SECRET, {
         expiresIn: '14 days'

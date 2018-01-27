@@ -17,7 +17,8 @@ var Rating = new Schema({
     media_id: {
         type: String
     },
-    user_id: {
+
+    username: {
         type: String
     },
     score: {

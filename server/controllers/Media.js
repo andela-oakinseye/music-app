@@ -1,5 +1,7 @@
+import Comment from '../models/Comment'
 import Media from '../models/Media';
 import User from '../models/User';
+import Rating from '../models/Rating';
 
 import * as Id from '../helpers/UserId';
 import * as Token from '../helpers/Token'
@@ -32,9 +34,22 @@ const getMedia = (req, res) => {
     const media_id = req.params.media_id;
     return Media.findOne({ media_id }, mediaFields, (err, media) => {
         if (!err) {
-                return media ?
-                    Reply.mediaRetrieveSuccess(res, media) :
-                        Reply.mediaNotFound(res);
+                if( media ) {
+                    return Comment.find( { media_id }, 'user_id username text created' )
+                        .then((comments) => {
+                            return Rating.find({ media_id }, 'username score created')
+                                .then((ratings) => {
+                                    const mediaData = {
+                                        media,
+                                        comments,
+                                        ratings,
+                                    };
+                                    return Reply.mediaRetrieveSuccess(res, mediaData);
+                                })
+                        })
+                } else {
+                    return Reply.mediaNotFound(res);
+                }
         }
         return Reply.mediaServerError(res, err);
     });

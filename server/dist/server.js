@@ -69,6 +69,9 @@ app.post('/api/user/signup', Handler.User.register);
 
 app.get('/api/user/media/:user_id', _AuthChecker2.default, Handler.Media.getUserMedia);
 
+app.post('/api/comment/:media_id', _AuthChecker2.default, Handler.Media.addComment);
+app.post('/api/rate/:media_id', _AuthChecker2.default, Handler.Media.addRating);
+
 app.get('/api/media/me', _AuthChecker2.default, Handler.Media.getMyMedia);
 app.get('/api/media', _AuthChecker2.default, Handler.Media.getAllMedia);
 app.get('/api/media/:media_id', _AuthChecker2.default, Handler.Media.getMedia);

@@ -17,9 +17,15 @@ var Comment = new Schema({
     media_id: {
         type: String
     },
-    user_id: {
+
+    username: {
         type: String
     },
+
+    firstname: {
+        type: String
+    },
+
     text: {
         type: String
     },
@@ -29,5 +35,5 @@ var Comment = new Schema({
     }
 });
 
-Media.plugin(AutoIncrement, { inc_field: 'comment_id' });
+Comment.plugin(AutoIncrement, { inc_field: 'comment_id' });
 module.exports = _mongoose2.default.model('Comment', Comment);

@@ -7,6 +7,10 @@ exports.getUserMedia = exports.getMyMedia = exports.getMedia = exports.getAllMed
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+var _Comment = require('../models/Comment');
+
+var _Comment2 = _interopRequireDefault(_Comment);
+
 var _Media = require('../models/Media');
 
 var _Media2 = _interopRequireDefault(_Media);
@@ -14,6 +18,10 @@ var _Media2 = _interopRequireDefault(_Media);
 var _User = require('../models/User');
 
 var _User2 = _interopRequireDefault(_User);
+
+var _Rating = require('../models/Rating');
+
+var _Rating2 = _interopRequireDefault(_Rating);
 
 var _UserId = require('../helpers/UserId');
 
@@ -63,7 +71,20 @@ var getMedia = function getMedia(req, res) {
     var media_id = req.params.media_id;
     return _Media2.default.findOne({ media_id: media_id }, mediaFields, function (err, media) {
         if (!err) {
-            return media ? Reply.mediaRetrieveSuccess(res, media) : Reply.mediaNotFound(res);
+            if (media) {
+                return _Comment2.default.find({ media_id: media_id }, 'user_id username text created').then(function (comments) {
+                    return _Rating2.default.find({ media_id: media_id }, 'username score created').then(function (ratings) {
+                        var mediaData = {
+                            media: media,
+                            comments: comments,
+                            ratings: ratings
+                        };
+                        return Reply.mediaRetrieveSuccess(res, mediaData);
+                    });
+                });
+            } else {
+                return Reply.mediaNotFound(res);
+            }
         }
         return Reply.mediaServerError(res, err);
     });

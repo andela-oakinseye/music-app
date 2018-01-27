@@ -16,6 +16,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const sign = (user) => { 
     return jwt.sign({
             username: user.username,
+            firstname: user.firstname,
             id: encode(user.user_id),
         },
         JWT_SECRET,
