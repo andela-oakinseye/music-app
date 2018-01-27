@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 
-
 dotenv.config();
 
 const GMAIL_ADDRESS = process.env.GMAIL_ADDRESS;
@@ -15,7 +14,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const SendMail = (message) => {
+const send = (message) => {
     const mailOptions = {
         from: GMAIL_ADDRESS,
         to: message.to,
@@ -32,4 +31,6 @@ const SendMail = (message) => {
       });
 }
 
-export default SendMail;
+export {
+  send,
+} 

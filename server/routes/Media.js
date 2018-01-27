@@ -1,6 +1,15 @@
-const MediaCtrl = require('../controllers/Media');
-export const AddMedia = MediaCtrl.AddMedia;
-export const GetMedia = MediaCtrl.GetMedia;
-export const GetMyMedia = MediaCtrl.GetMyMedia;
-export const GetUserMedia = MediaCtrl.GetUserMedia;
-export const GetAllMedia = MediaCtrl.GetAllMedia;
+import * as Media from '../controllers/Media';
+
+const addMedia = Media.addMedia;
+const getMedia = Media.getMedia;
+const getMyMedia = Media.getMyMedia;
+const getUserMedia = Media.getUserMedia;
+const getAllMedia = Media.getAllMedia;
+
+export {
+    addMedia,
+    getMedia,
+    getMyMedia,
+    getUserMedia,
+    getAllMedia,
+}

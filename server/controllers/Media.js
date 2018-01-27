@@ -1,157 +1,92 @@
-import dotenv from 'dotenv';
-import * as jwt from 'jsonwebtoken';
-import HashIds from 'hashids';
-
 import Media from '../models/Media';
 import User from '../models/User';
 
-dotenv.config();
+import * as Id from '../helpers/UserId';
+import * as Token from '../helpers/Token'
+import * as Reply from '../helpers/response/Media';
+import { userNotFound } from '../helpers/response/User'
+import * as RequestValidator from '../helpers/validate/Media';
+import * as DateTime from '../helpers/DateTime';
 
-const secret = process.env.SECRET || '|{-_-}|';
-const hashSalt = process.env.HASH_ID_SALT;
-
-const hashIds = new HashIds(hashSalt, 4); // Pad it to 4
 const mediaFields = 'title username type link created';
 
-export const AddMedia = (req, res) => {
-    const token = req.params.token || req.body.token || req.headers.token;
-    const requestIsGood = token && req.body;
-    if (requestIsGood) {
-        const decodedToken = jwt.verify(token, secret);
+const addMedia = (req, res) => {
+    if (RequestValidator.mediaIsGood(req)) {
+        const token = req.body.token || req.params.token || req.headers.token;
+        const decodedToken = Token.decode(token)
         const username = decodedToken.username;
-        const title = req.body.title;
-        const type = req.body.type;
-        const link = req.body.link;
-
-        const mediaData = new Media({
-            title,
-            username,
-            type,
-            link,
-        });
+        const body = req.body;
+        const media = {...body, username };
+        const mediaData = new Media(media);
 
         return mediaData.save((err, media) => {
-            if (!err) {
-                return res.status(201).json({
-                    success: true,
-                    data: media
-                })
-            } else {
-                return res.status(500).json({
-                    success: false,
-                    message: err.message
-                })
-            }
-        });
-    } else {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid Request, provide all fields'
+            return !err ?
+                Reply.mediaSaveSuccess(res, media) :
+                    Reply.mediaServerError(res, err);
         });
     }
+    return Reply.mediaSaveInvalid(res);
 }
 
-export const GetMedia = (req, res) => {
+const getMedia = (req, res) => {
     const media_id = req.params.media_id;
     return Media.findOne({ media_id }, mediaFields, (err, media) => {
         if (!err) {
-            return media ?
-                res.status(200).json({
-                    success: true,
-                    data: media
-                }) :
-                res.status(404).json({
-                    success: false,
-                    message: 'Media not found'
-                });
-        } else {
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
+                return media ?
+                    Reply.mediaRetrieveSuccess(res, media) :
+                        Reply.mediaNotFound(res);
         }
+        return Reply.mediaServerError(res, err);
     });
 }
 
-export const GetMyMedia = (req, res) => {
-    const token = req.params.token || req.body.token || req.headers.token;
-    const requestIsGood = token;
+const getMyMedia = (req, res) => {
+    const token = req.body.token || req.params.token || req.headers.token;
+    const decodedToken = Token.decode(token)
+    const username = decodedToken.username;
 
-    if (token) {
-        const decodedToken = jwt.verify(token, secret);
-        const username = decodedToken.username;
+    return Media.find({ username }, mediaFields, (err, userMedia) => {
+        if (!err) {
+            return userMedia.length ?
+                Reply.mediaRetrieveSuccess(res, userMedia) :
+                    Reply.mediaEmptyForUser(res);
+        }
+        return Reply.mediaServerError(res, err);
 
-        return Media.find({ username }, mediaFields, (err, userMedia) => { 
-            if (!err) {
-                return userMedia.length ?
-                    res.status(200).json({
-                        success: true,
-                        data: userMedia
-                    }) :
-                    res.status(404).json({
-                        success: false,
-                        message: 'User has no media'
-                    });
-            } else {
-                return res.status(500).json({
-                    success: false,
-                    message: err.message
-                });
-            }
-
-        });
-    } else {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid Request, provide a token'
-        });
-    }
+    });
 }
 
-export const GetUserMedia = (req, res) => {
-    const user_id = hashIds.decode(req.params.user_id)[0];
+const getUserMedia = (req, res) => {
+    const user_id = Id.decode(req.params.user_id)[0];
     return User.findOne({ user_id }, 'username')
         .then((user) => {
             if (user) {
                 return user ?
                     Media.find({ username: user.username }, mediaFields, (err, media) => {
-                        return res.status(200).json({
-                            success: true,
-                            data: media,
-                        })
+                        return Reply.mediaRetrieveSuccess(res, media);
                     }) :
-                    res.status(404).json({
-                        success: false,
-                        message: 'No such user'
-                    });
+                    userNotFound(res);
             }
         })
-        .catch((err) => {
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            })
-        })
+        .catch(err => Reply.mediaServerError(res, err));
 }
 
-export const GetAllMedia = (req, res) => {
-
+const getAllMedia = (req, res) => {
     return Media.find({}, mediaFields, (err, allMedia) => {
         if (!err) {
             return allMedia.length ?
-                res.status(200).json({
-                    success: true,
-                    data: allMedia
-                }) :
-                res.status(404).json({
-                    success: false,
-                    message: 'No media found'
-                });
+                Reply.mediaRetrieveSuccess(res, allMedia) :
+                    Reply.mediaNotFound(res);
         } else {
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
+            return Reply.mediaServerError(res, err);
         }
     })
+}
+
+export {
+    addMedia,
+    getAllMedia,
+    getMedia,
+    getMyMedia,
+    getUserMedia,
 }

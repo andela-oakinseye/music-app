@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
 
-import * as Routes from './routes/index';
+import * as Handler from './routes/index';
 import AuthChecker from './middlewares/AuthChecker';
 
 dotenv.config();
@@ -43,18 +43,18 @@ app.get('/', (req, res) => {
 });
 
 // User profile
-app.get('/api/user/:user_id', AuthChecker, Routes.User.GetUserProfile);
+app.get('/api/user/:user_id', AuthChecker, Handler.User.getUserProfile);
 
-app.post('/api/user/login', Routes.User.Login);
-app.post('/api/user/signup', Routes.User.Signup);
+app.post('/api/user/login', Handler.User.login);
+app.post('/api/user/signup', Handler.User.register);
 
-app.get('/api/user/media/:user_id', AuthChecker, Routes.Media.GetUserMedia);
+app.get('/api/user/media/:user_id', AuthChecker, Handler.Media.getUserMedia);
 
 
-app.get('/api/media/me', AuthChecker, Routes.Media.GetMyMedia);
-app.get('/api/media', AuthChecker, Routes.Media.GetAllMedia);
-app.get('/api/media/:media_id', AuthChecker, Routes.Media.GetMedia);
-app.post('/api/media', AuthChecker, Routes.Media.AddMedia);
+app.get('/api/media/me', AuthChecker, Handler.Media.getMyMedia);
+app.get('/api/media', AuthChecker, Handler.Media.getAllMedia);
+app.get('/api/media/:media_id', AuthChecker, Handler.Media.getMedia);
+app.post('/api/media', AuthChecker, Handler.Media.addMedia);
 
 app.listen(PORT, () => {
     console.log('Running on : ' + PORT);

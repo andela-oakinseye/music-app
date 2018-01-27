@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export const Login = (userInfo) => {
+const login = (userInfo) => {
     return {
         to: userInfo.email,
         subject: 'BREAKOUT - Login Notification',
@@ -11,7 +11,7 @@ export const Login = (userInfo) => {
     }  
 }
 
-export const Register = (userInfo) => {
+const register = (userInfo) => {
     return {
         to: userInfo.email,
         subject: 'Welcome to Breakout!',
@@ -23,7 +23,7 @@ export const Register = (userInfo) => {
     }
 }
 
-export const Comment = (commentInfo) => {
+const comment = (commentInfo) => {
     return {
         to: commentInfo.mediaOwnerEmail,
         subject: 'BREAKOUT - New Comment',
@@ -35,7 +35,7 @@ export const Comment = (commentInfo) => {
     }
 }
 
-export const Rating = (ratingInfo) => {
+const rating = (ratingInfo) => {
     return {
         to: ratingInfo.mediaOwnerEmail,
         subject: 'BREAKOUT - New Rating',
@@ -45,4 +45,11 @@ export const Rating = (ratingInfo) => {
             <p> Please login to Breakout to view the rating </p>
         `
     }
+}
+
+export {
+    login,
+    register,
+    comment,
+    rating,
 }

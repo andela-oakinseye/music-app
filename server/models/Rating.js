@@ -8,7 +8,7 @@ const Rating = new Schema({
     media_id: {
         type: String,
     },
-    username: {
+    user_id: {
         type: String,
     },
     score: {

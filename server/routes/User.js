@@ -1,4 +1,11 @@
-const UserCtrl = require('../controllers/User');
-export const Login = UserCtrl.Login;
-export const Signup = UserCtrl.Register;
-export const GetUserProfile = UserCtrl.GetUserProfile;
+import * as User from '../controllers/User';
+
+const login = User.login;
+const register = User.register;
+const getUserProfile = User.getUserProfile;
+
+export {
+    login,
+    register,
+    getUserProfile,
+}

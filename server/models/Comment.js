@@ -8,7 +8,7 @@ const Comment = new Schema({
     media_id: {
         type: String,
     },
-    username: {
+    user_id: {
         type: String,
     },
     text: {
