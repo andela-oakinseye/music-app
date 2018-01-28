@@ -58,7 +58,10 @@ app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
 
 app.get('/', function (req, res) {
-    return res.send("Welcome");
+    return res.status(200).json({
+        success: true,
+        message: 'Welcome to breakout API'
+    });
 });
 
 // User profile

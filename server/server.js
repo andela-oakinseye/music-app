@@ -39,7 +39,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.get('/', (req, res) => {
-    return res.send("Welcome")
+    return res.status(200).json({
+        success: true,
+        message: 'Welcome to breakout API'
+    });
 });
 
 // User profile
