@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build:server": "rimraf server/dist/ && babel ./server --out-dir server/dist/ --ignore ./app,./.env,./node_modules,./.babelrc,./package.json,./package-lock.json,./.gitignore,./npm-debug.log --copy-files",
-    "start": "npm run build:server && node server/dist/server"
+    "start": "node server/dist/server"
   },
   "repository": {
     "type": "git",
