@@ -1,11 +1,26 @@
 import dotenv from 'dotenv';
 import express from 'express';
+
+//CORS middleware
+const allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'example.com');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
+
+app.configure(function() {
+    app.use(allowCrossDomain);
+})
+
+
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
-import cor from 'cors';
+// import cor from 'cors';
 
-app.use(cor());
+// app.use(cor());
 
 import * as Handler from './routes/index';
 import AuthChecker from './middlewares/AuthChecker';
@@ -19,7 +34,7 @@ const SECRET = process.env.SECRET
 const app = express();
 
 // ? 
-// app.set('trust proxy', true);
+app.set('trust proxy', true);
 
 
 // Connect to mongodb
