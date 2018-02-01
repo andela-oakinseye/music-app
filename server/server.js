@@ -5,6 +5,8 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 import cor from 'cors';
 
+app.use(cor());
+
 import * as Handler from './routes/index';
 import AuthChecker from './middlewares/AuthChecker';
 
@@ -36,7 +38,6 @@ if (app.get('env') === 'production') {
   app.use(logger('dev'));
 }
 
-app.use(cor());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
