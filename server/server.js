@@ -19,7 +19,7 @@ const SECRET = process.env.SECRET
 const app = express();
 
 // ? 
-app.set('trust proxy', true);
+// app.set('trust proxy', true);
 
 
 // Connect to mongodb
