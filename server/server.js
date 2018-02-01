@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
+import cor from 'cors';
 
 import * as Handler from './routes/index';
 import AuthChecker from './middlewares/AuthChecker';
@@ -34,6 +35,8 @@ if (app.get('env') === 'production') {
 } else {
   app.use(logger('dev'));
 }
+
+app.use(cor());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -41,7 +44,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', (req, res) => {
     return res.status(200).json({
         success: true,
-        message: 'Welcome to breakout API'
+        message: 'Welcome to breakout API',
     });
 });
 
