@@ -70,8 +70,8 @@ var getMedia = function getMedia(req, res) {
     return _Media2.default.findOne({ media_id: media_id }, function (err, media) {
         if (!err) {
             if (media) {
-                return _Comment2.default.find({ media_id: media_id }, 'user_id username text created').then(function (comments) {
-                    return _Rating2.default.find({ media_id: media_id }, 'username score created').then(function (ratings) {
+                return _Comment2.default.find({ media_id: media_id }).then(function (comments) {
+                    return _Rating2.default.find({ media_id: media_id }).then(function (ratings) {
                         var mediaData = {
                             media: media,
                             comments: comments,

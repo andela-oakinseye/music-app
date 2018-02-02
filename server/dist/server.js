@@ -45,17 +45,6 @@ var SECRET = process.env.SECRET;
 var app = (0, _express2.default)();
 app.use((0, _cors2.default)());
 
-// //CORS middleware
-// const allowCrossDomain = function(req, res, next) {
-//     res.header('Access-Control-Allow-Origin', 'example.com');
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//     res.header('Access-Control-Allow-Headers', 'Content-Type');
-
-//     next();
-// }
-
-//     app.use(allowCrossDomain);
-
 // ? 
 app.set('trust proxy', true);
 

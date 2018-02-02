@@ -33,9 +33,9 @@ const getMedia = (req, res) => {
     return Media.findOne({ media_id }, (err, media) => {
         if (!err) {
                 if( media ) {
-                    return Comment.find( { media_id }, 'user_id username text created' )
+                    return Comment.find( { media_id })
                         .then((comments) => {
-                            return Rating.find({ media_id }, 'username score created')
+                            return Rating.find({ media_id })
                                 .then((ratings) => {
                                     const mediaData = {
                                         media,
