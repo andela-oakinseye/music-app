@@ -49,8 +49,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mediaFields = 'title username type link created';
-
 var addMedia = function addMedia(req, res) {
     if (RequestValidator.mediaIsGood(req)) {
         var token = req.body.token || req.params.token || req.headers.token;
@@ -69,7 +67,7 @@ var addMedia = function addMedia(req, res) {
 
 var getMedia = function getMedia(req, res) {
     var media_id = req.params.media_id;
-    return _Media2.default.findOne({ media_id: media_id }, mediaFields, function (err, media) {
+    return _Media2.default.findOne({ media_id: media_id }, function (err, media) {
         if (!err) {
             if (media) {
                 return _Comment2.default.find({ media_id: media_id }, 'user_id username text created').then(function (comments) {
@@ -95,7 +93,7 @@ var getMyMedia = function getMyMedia(req, res) {
     var decodedToken = Token.decode(token);
     var username = decodedToken.username;
 
-    return _Media2.default.find({ username: username }, mediaFields, function (err, userMedia) {
+    return _Media2.default.find({ username: username }, function (err, userMedia) {
         if (!err) {
             return userMedia.length ? Reply.mediaRetrieveSuccess(res, userMedia) : Reply.mediaEmptyForUser(res);
         }
@@ -107,7 +105,7 @@ var getUserMedia = function getUserMedia(req, res) {
     var user_id = Id.decode(req.params.user_id)[0];
     return _User2.default.findOne({ user_id: user_id }, 'username').then(function (user) {
         if (user) {
-            return user ? _Media2.default.find({ username: user.username }, mediaFields, function (err, media) {
+            return user ? _Media2.default.find({ username: user.username }, function (err, media) {
                 return Reply.mediaRetrieveSuccess(res, media);
             }) : (0, _User3.userNotFound)(res);
         }
@@ -117,7 +115,7 @@ var getUserMedia = function getUserMedia(req, res) {
 };
 
 var getAllMedia = function getAllMedia(req, res) {
-    return _Media2.default.find({}, mediaFields, function (err, allMedia) {
+    return _Media2.default.find({}, function (err, allMedia) {
         if (!err) {
             return allMedia.length ? Reply.mediaRetrieveSuccess(res, allMedia) : Reply.mediaNotFound(res);
         } else {

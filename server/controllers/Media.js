@@ -10,8 +10,6 @@ import { userNotFound } from '../helpers/response/User'
 import * as RequestValidator from '../helpers/validate/Media';
 import * as DateTime from '../helpers/DateTime';
 
-const mediaFields = 'title username type link created media_id';
-
 const addMedia = (req, res) => {
     if (RequestValidator.mediaIsGood(req)) {
         const token = req.body.token || req.params.token || req.headers.token;
@@ -32,7 +30,7 @@ const addMedia = (req, res) => {
 
 const getMedia = (req, res) => {
     const media_id = req.params.media_id;
-    return Media.findOne({ media_id }, mediaFields, (err, media) => {
+    return Media.findOne({ media_id }, (err, media) => {
         if (!err) {
                 if( media ) {
                     return Comment.find( { media_id }, 'user_id username text created' )
@@ -60,7 +58,7 @@ const getMyMedia = (req, res) => {
     const decodedToken = Token.decode(token)
     const username = decodedToken.username;
 
-    return Media.find({ username }, mediaFields, (err, userMedia) => {
+    return Media.find({ username }, (err, userMedia) => {
         if (!err) {
             return userMedia.length ?
                 Reply.mediaRetrieveSuccess(res, userMedia) :
@@ -77,7 +75,7 @@ const getUserMedia = (req, res) => {
         .then((user) => {
             if (user) {
                 return user ?
-                    Media.find({ username: user.username }, mediaFields, (err, media) => {
+                    Media.find({ username: user.username }, (err, media) => {
                         return Reply.mediaRetrieveSuccess(res, media);
                     }) :
                     userNotFound(res);
@@ -87,7 +85,7 @@ const getUserMedia = (req, res) => {
 }
 
 const getAllMedia = (req, res) => {
-    return Media.find({}, mediaFields, (err, allMedia) => {
+    return Media.find({}, (err, allMedia) => {
         if (!err) {
             return allMedia.length ?
                 Reply.mediaRetrieveSuccess(res, allMedia) :
