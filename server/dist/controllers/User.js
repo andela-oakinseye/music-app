@@ -13,6 +13,14 @@ var _User = require('../models/User');
 
 var _User2 = _interopRequireDefault(_User);
 
+var _Media = require('../models/Media');
+
+var _Media2 = _interopRequireDefault(_Media);
+
+var _Comment = require('../models/Comment');
+
+var _Comment2 = _interopRequireDefault(_Comment);
+
 var _UserId = require('../helpers/UserId');
 
 var Id = _interopRequireWildcard(_UserId);
@@ -74,10 +82,25 @@ var register = function register(req, res) {
 };
 
 var getUserProfile = function getUserProfile(req, res) {
-    var user_id = Id.decode(req.params.user_id);
-    return _User2.default.findOne({ user_id: user_id }, profileFields, function (err, user) {
+    var username = req.params.user_id;
+    console.log(username);
+    var userProfileMedia = {};
+    return _User2.default.findOne({ username: username }, profileFields, function (err, user) {
         if (!err) {
-            return user ? Reply.userProfileData(res, user) : Reply.userNotFound(res, err);
+            if (user) {
+                userProfileMedia.user = user;
+                return _Media2.default.find({ username: username }).then(function (data) {
+                    if (data.length) userProfileMedia.media = data;
+                }).then(function (response) {
+                    return _Comment2.default.find({ username: username }).then(function (comments) {
+                        userProfileMedia.comment = comments;
+                        res.status(200).json({
+                            success: true,
+                            data: userProfileMedia
+                        });
+                    });
+                });
+            } else Reply.userNotFound(res, err);
         } else return Reply.serverError(res, err);
     });
 };

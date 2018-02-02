@@ -21,7 +21,6 @@ var addRating = function addRating(req, res) {
     var token = req.body.token || req.params.token || req.headers.token;
     var decodedToken = (0, _Token.decode)(token);
     var media_id = req.body.media_id || req.params.media_id;
-    var media_name = req.body.media_name;
     var score = Number(req.body.score);
     var username = decodedToken.username;
 

@@ -14,5 +14,4 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var format = function format(datetime) {
     return (0, _moment2.default)(datetime).format('lll');
 };
-
 exports.format = format;

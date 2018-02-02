@@ -8,7 +8,6 @@ const addRating = (req, res) => {
     const token = req.body.token || req.params.token || req.headers.token;
     const decodedToken = decode(token);
     const media_id = req.body.media_id || req.params.media_id;
-    const media_name = req.body.media_name;
     const score = Number(req.body.score);
     const username = decodedToken.username;
 
