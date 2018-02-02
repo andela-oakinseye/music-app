@@ -16,13 +16,13 @@ const addMedia = (req, res) => {
         const decodedToken = Token.decode(token)
         const username = decodedToken.username;
         const body = req.body;
-        const media = {...body, username };
+        const media = { ...body, username };
         const mediaData = new Media(media);
 
         return mediaData.save((err, media) => {
             return !err ?
                 Reply.mediaSaveSuccess(res, media) :
-                    Reply.mediaServerError(res, err);
+                Reply.mediaServerError(res, err);
         });
     }
     return Reply.mediaSaveInvalid(res);
@@ -32,22 +32,22 @@ const getMedia = (req, res) => {
     const media_id = req.params.media_id;
     return Media.findOne({ media_id }, (err, media) => {
         if (!err) {
-                if( media ) {
-                    return Comment.find( { media_id })
-                        .then((comments) => {
-                            return Rating.find({ media_id })
-                                .then((ratings) => {
-                                    const mediaData = {
-                                        media,
-                                        comments,
-                                        ratings,
-                                    };
-                                    return Reply.mediaRetrieveSuccess(res, mediaData);
-                                })
-                        })
-                } else {
-                    return Reply.mediaNotFound(res);
-                }
+            if (media) {
+                return Comment.find({ media_id })
+                    .then((comments) => {
+                        return Rating.find({ media_id })
+                            .then((ratings) => {
+                                const mediaData = {
+                                    media,
+                                    comments,
+                                    ratings,
+                                };
+                                return Reply.mediaRetrieveSuccess(res, mediaData);
+                            })
+                    })
+            } else {
+                return Reply.mediaNotFound(res);
+            }
         }
         return Reply.mediaServerError(res, err);
     });
@@ -62,7 +62,7 @@ const getMyMedia = (req, res) => {
         if (!err) {
             return userMedia.length ?
                 Reply.mediaRetrieveSuccess(res, userMedia) :
-                    Reply.mediaEmptyForUser(res);
+                Reply.mediaEmptyForUser(res);
         }
         return Reply.mediaServerError(res, err);
 
@@ -85,15 +85,17 @@ const getUserMedia = (req, res) => {
 }
 
 const getAllMedia = (req, res) => {
-    return Media.find({}, (err, allMedia) => {
-        if (!err) {
+    return Media.find({})
+        .sort({media_id: -1, created: -1 })
+        .then((allMedia) => {
+            console.log(allMedia);
             return allMedia.length ?
                 Reply.mediaRetrieveSuccess(res, allMedia) :
-                    Reply.mediaNotFound(res);
-        } else {
+                Reply.mediaNotFound(res);
+        })
+        .catch((err) => {
             return Reply.mediaServerError(res, err);
-        }
-    })
+        });
 }
 
 export {

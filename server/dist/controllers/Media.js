@@ -115,12 +115,11 @@ var getUserMedia = function getUserMedia(req, res) {
 };
 
 var getAllMedia = function getAllMedia(req, res) {
-    return _Media2.default.find({}, function (err, allMedia) {
-        if (!err) {
-            return allMedia.length ? Reply.mediaRetrieveSuccess(res, allMedia) : Reply.mediaNotFound(res);
-        } else {
-            return Reply.mediaServerError(res, err);
-        }
+    return _Media2.default.find({}).sort({ media_id: -1, created: -1 }).then(function (allMedia) {
+        console.log(allMedia);
+        return allMedia.length ? Reply.mediaRetrieveSuccess(res, allMedia) : Reply.mediaNotFound(res);
+    }).catch(function (err) {
+        return Reply.mediaServerError(res, err);
     });
 };
 
