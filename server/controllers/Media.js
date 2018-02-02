@@ -10,7 +10,7 @@ import { userNotFound } from '../helpers/response/User'
 import * as RequestValidator from '../helpers/validate/Media';
 import * as DateTime from '../helpers/DateTime';
 
-const mediaFields = 'title username type link created';
+const mediaFields = 'title username type link created media_id';
 
 const addMedia = (req, res) => {
     if (RequestValidator.mediaIsGood(req)) {
